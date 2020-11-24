@@ -1,0 +1,16 @@
+[build-system]
+requires = ["poetry", "poetry_core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "poetry-temporal-matching"
+version = "0.1.0"
+description = ""
+authors = ["uncleman11"]
+
+[tool.poetry.dependencies]
+python = "3.8"
+
+[tool.poetry.dev-dependencies]
+networkx = "2.5"
+pytest = "6.1.2"
