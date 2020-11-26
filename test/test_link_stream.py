@@ -27,6 +27,24 @@ def test_create_link_stream_from_file_with_gaps():
     )
 
 
+def test_equality_positive():
+    link_stream = LinkStream('test/test_cases/link_stream_1.txt')
+    link_stream_2 = LinkStream('test/test_cases/link_stream_1.txt')
+    assert link_stream == link_stream_2
+
+
+def test_equality_negative_length():
+    link_stream = LinkStream('test/test_cases/link_stream_1.txt')
+    link_stream_2 = LinkStream('test/test_cases/expected_gamma_link_stream_1.txt')
+    assert not link_stream == link_stream_2
+
+
+def test_equality_negative_isomorphism():
+    link_stream = LinkStream('test/test_cases/link_stream_1.txt')
+    link_stream_2 = LinkStream('test/test_cases/link_stream_2.txt')
+    assert not link_stream == link_stream_2
+
+
 def test_create_link_stream_from_file_t_not_incremental():
     with pytest.raises(InvalidLinkStreamError, match='t dimension needs to be incremental!'):
         link_stream = LinkStream('test/test_cases/link_stream_t_not_incremental_1.txt')
@@ -135,8 +153,9 @@ def test_str(link_stream):
     )
 
 
-#def test_gamma_link_stream(link_stream):
-#    expected_gamma_link_stream = LinkStream()
-
-#    link_stream.add_vertexes()
+def test_gamma_link_stream():
+    link_stream = LinkStream('test/test_cases/link_stream_1.txt')
+    expected_gamma_link_stream = LinkStream('test/test_cases/expected_gamma_link_stream_1.txt')
+    gamma_link_stream = link_stream.get_gamma_link_stream(2)
+    assert str(gamma_link_stream) == str(expected_gamma_link_stream)
 

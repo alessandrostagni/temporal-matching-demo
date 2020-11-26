@@ -1,6 +1,7 @@
 import logging
 
 import networkx as nx
+from networkx.algorithms.isomorphism import is_isomorphic
 
 from LinkStream.LinkStreamError import InvalidLinkStreamError
 
@@ -65,6 +66,14 @@ class LinkStream:
             out += '------\n'
         return out
 
+    def __eq__(self, link_stream):
+        if len(self.graphs) != len(link_stream.graphs):
+            return False
+        for g1, g2 in zip(self.graphs, link_stream.graphs):
+            if not is_isomorphic(g1, g2):
+                return False
+        return True
+
     def get_vertexes(self):
         return self.vertexes
 
@@ -90,23 +99,39 @@ class LinkStream:
     def get_graph(self, t):
         return self.graphs[t]
 
+    def get_graphs(self):
+        return self.graphs
+
     def get_gamma_link_stream(self, gamma):
         edge_dict = {}
         gamma_link_stream = LinkStream()
+        gamma_link_stream.add_vertexes(self.get_vertexes())
 
-        for t in range(self.graphs):
+        checked_edges = set()
+
+        for g1 in self.graphs:
+            for e in g.edges:
+                if e not in checked_edges:
+                    for t, g2 in enumerate(self.graphs[1:]):
+                        
+
+
+
+
+        for g in self.graphs:
             new_edge_dict = {}
             gamma_graph = nx.Graph()
-            g = self.graphs[t]
             for e in g.edges:
                 if e not in edge_dict:
                     new_edge_dict[e] = 1
                 else:
                     new_edge_dict[e] = edge_dict[e] + 1
                     if new_edge_dict[e] >= gamma:
-                        gamma_graph.add_edge(e)
+                        gamma_graph.add_edge(*e)
+            print(new_edge_dict)
             edge_dict = new_edge_dict
             gamma_link_stream.add_graph(g)
+        print(gamma_link_stream)
         return gamma_link_stream
 
 
