@@ -104,11 +104,10 @@ class LinkStream:
         return self.graphs
 
     def get_gamma_link_stream(self, gamma):
-        edge_dict = {}
         gamma_link_stream = LinkStream()
         
         # Initialise empty graphs for gamma link stream
-        for g in self.graphs:
+        for _ in self.graphs:
             gamma_link_stream.add_graph(nx.Graph())
 
         gamma_link_stream.add_vertexes(self.get_vertexes())
