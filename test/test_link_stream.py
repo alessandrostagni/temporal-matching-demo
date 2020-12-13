@@ -1,4 +1,5 @@
 import re
+import copy
 
 import pytest
 import networkx as nx
@@ -105,6 +106,27 @@ def test_get_graph(link_stream):
 
     assert is_isomorphic(g2, link_stream.get_graph(1))
 
+def test_get_graphs(link_stream):
+    g1 = nx.Graph()
+    g1.add_nodes_from((1,2,3))
+    g1.add_edge(1,2)
+    g1.add_edge(2,3)
+
+    g2 = nx.Graph()
+    g2.add_nodes_from((1, 2, 3))
+    g2.add_edge(1, 3)
+
+    g3 = nx.Graph()
+    g3.add_nodes_from((1, 2, 3))
+    g3.add_edge(2, 3)
+
+    link_stream.add_vertexes((1, 2, 3))
+    link_stream.add_graph(g1)
+    link_stream.add_graph(g2)
+    link_stream.add_graph(g3)
+
+    for t, g in enumerate(link_stream.get_graphs()):
+        assert is_isomorphic(g, link_stream.graphs[t])
 
 def test_add_illegal_graph_not_subset(link_stream):
     link_stream.add_vertexes([1, 2])
@@ -126,6 +148,80 @@ def test_add_illegal_graph_not_superset(link_stream):
 
 def test_str_empty_link_stream(link_stream):
     assert str(link_stream) == 'Link stream is empty!'
+
+def test_eq_true(link_stream):
+    g1 = nx.Graph()
+    g1.add_nodes_from((1, 2, 3))
+    g1.add_edge(1, 2)
+    g1.add_edge(2, 3)
+
+    g2 = nx.Graph()
+    g2.add_nodes_from((1, 2, 3))
+    g2.add_edge(1, 3)
+
+    g3 = nx.Graph()
+    g3.add_nodes_from((1, 2, 3))
+    g3.add_edge(2, 3)
+
+    link_stream.add_vertexes((1, 2, 3))
+    link_stream.add_graph(g1)
+    link_stream.add_graph(g2)
+    link_stream.add_graph(g3)
+
+    link_stream_2 = copy.deepcopy(link_stream)
+    assert link_stream.__eq__(link_stream_2)
+
+def test_eq_false_by_edge(link_stream):
+    g1 = nx.Graph()
+    g1.add_nodes_from((1, 2, 3))
+    g1.add_edge(1, 2)
+    g1.add_edge(2, 3)
+
+    g2 = nx.Graph()
+    g2.add_nodes_from((1, 2, 3))
+    g2.add_edge(1, 3)
+
+    g3 = nx.Graph()
+    g3.add_nodes_from((1, 2, 3))
+    g3.add_edge(2, 3)
+
+    link_stream.add_vertexes((1, 2, 3))
+    link_stream.add_graph(g1)
+    link_stream.add_graph(g2)
+    link_stream.add_graph(g3)
+    link_stream_2 = copy.deepcopy(link_stream)
+    link_stream_2.get_graph(1).add_edge(1, 2)
+
+    assert not link_stream.__eq__(link_stream_2)
+
+
+def test_eq_false_by_n_graphs(link_stream):
+    g1 = nx.Graph()
+    g1.add_nodes_from((1, 2, 3))
+    g1.add_edge(1, 2)
+    g1.add_edge(2, 3)
+
+    g2 = nx.Graph()
+    g2.add_nodes_from((1, 2, 3))
+    g2.add_edge(1, 3)
+
+    g3 = nx.Graph()
+    g3.add_nodes_from((1, 2, 3))
+    g3.add_edge(2, 3)
+
+    link_stream.add_vertexes((1, 2, 3))
+    link_stream.add_graph(g1)
+    link_stream.add_graph(g2)
+    link_stream.add_graph(g3)
+    link_stream_2 = copy.deepcopy(link_stream)
+
+    g4 = nx.Graph()
+    g4.add_nodes_from((1, 2, 3))
+    g4.add_edge(1, 2)
+
+    link_stream_2.add_graph(g4)
+
+    assert not link_stream.__eq__(link_stream_2)
 
 
 def test_str(link_stream):
