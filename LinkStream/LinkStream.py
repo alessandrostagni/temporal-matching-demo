@@ -35,9 +35,10 @@ class LinkStream:
                             raise InvalidLinkStreamError('t dimension needs to be incremental!')
                     g = nx.Graph()
                     old_t = new_t
-                self.vertexes.update((record[0], record[1]))
-                g.add_nodes_from((record[0], record[1]))
-                g.add_edge(record[0], record[1])
+                if record[0] != -1 and record [1] != -1:
+                    self.vertexes.update((record[0], record[1]))
+                    g.add_nodes_from((record[0], record[1]))
+                    g.add_edge(record[0], record[1])
             self.graphs.append(g)
 
     def write_to_file(self, path):
@@ -105,33 +106,33 @@ class LinkStream:
     def get_gamma_link_stream(self, gamma):
         edge_dict = {}
         gamma_link_stream = LinkStream()
+        
+        # Initialise empty graphs for gamma link stream
+        for g in self.graphs:
+            gamma_link_stream.add_graph(nx.Graph())
+
         gamma_link_stream.add_vertexes(self.get_vertexes())
 
         checked_edges = set()
 
-        for g1 in self.graphs:
-            for e in g.edges:
+        # For every graph
+        for t1, g1 in enumerate(self.graphs):
+            # For every edge in the graph
+            for e in g1.edges:
+                # Take edge into account
+                print(e)
                 if e not in checked_edges:
-                    for t, g2 in enumerate(self.graphs[1:]):
-                        
-
-
-
-
-        for g in self.graphs:
-            new_edge_dict = {}
-            gamma_graph = nx.Graph()
-            for e in g.edges:
-                if e not in edge_dict:
-                    new_edge_dict[e] = 1
-                else:
-                    new_edge_dict[e] = edge_dict[e] + 1
-                    if new_edge_dict[e] >= gamma:
-                        gamma_graph.add_edge(*e)
-            print(new_edge_dict)
-            edge_dict = new_edge_dict
-            gamma_link_stream.add_graph(g)
-        print(gamma_link_stream)
+                    edge_presence = []
+                    for g2 in self.graphs[t1 + 1:]:
+                        if e in g2.edges:
+                            edge_presence.append(1)
+                        else:
+                            edge_presence.append(0)
+                    print(edge_presence)
+                    for t in range(len(edge_presence)):
+                        print(edge_presence[t:t + gamma])
+                        if e in self.graphs[t1 + t].edges and 1 in edge_presence[t:t + gamma]:
+                            gamma_link_stream.graphs[t1 + t].add_edge(*e)
         return gamma_link_stream
 
 
