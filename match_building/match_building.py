@@ -1,18 +1,21 @@
 import re
 
-import boolean
 import networkx as nx
 
-from BooleanEntities.Clause import Clause
 from LinkStream import LinkStream
+from BooleanEntities.Clause import Clause
+
+
+def get_clauses(algebra, formula):
+    text_clauses = re.findall(r'\([a-z~| ]+\)', formula.get_text_formula()) 
+    clauses = [Clause(algebra, text_clause) for text_clause in text_clauses]
+    return clauses
 
 
 def build_link_stream_from_clause(algebra, formula, gamma):
 
-    text_clauses = re.findall(r'\([a-z~| ]+\)', formula.get_text_formula()) 
-    clauses = [Clause(algebra, text_clause) for text_clause in text_clauses]
+    clauses = get_clauses(algebra, formula)
     m = len(clauses)
-    
     link_stream = LinkStream.LinkStream()
 
     # Initialise link stream with nodes
@@ -33,7 +36,7 @@ def build_link_stream_from_clause(algebra, formula, gamma):
         g = nx.Graph()
         g.add_nodes_from(link_stream.vertexes)
         link_stream.add_graph(g)
-    
+
     for s in boolean_formula.symbols:
         # Initialise Evar
         for t in range(0, (m+1) * gamma):
@@ -48,10 +51,16 @@ def build_link_stream_from_clause(algebra, formula, gamma):
                 )
                 g.add_edge(f'{s}+', f'{s}{i}++')
                 g.add_edge(f'{s}-', f'{s}{i}--')
-        
+
                 # Initialise Ecla
-                if len(re.findall(f"[^~]{s}", text_clauses[i])) > 0:
+                if len(re.findall(f"[^~]{s}", clauses[i].get_text_clause())) > 0:
                     g.add_edge('c', f'{s}{i}++')
-                if len(re.findall(f"~{s}", text_clauses[i])) > 0:
+                if len(re.findall(f"~{s}", clauses[i].get_text_clause())) > 0:
                     g.add_edge('c', f'{s}{i}--')
     return link_stream
+
+
+def build_match(algebra, formula, assignment, link_stream):
+    clauses = get_clauses(algebra, formula)
+    m = len(clauses)
+    link_stream = LinkStream()
