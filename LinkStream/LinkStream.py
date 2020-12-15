@@ -119,7 +119,6 @@ class LinkStream:
             # For every edge in the graph
             for e in g1.edges:
                 # Take edge into account
-                print(e)
                 if e not in checked_edges:
                     edge_presence = []
                     for g2 in self.graphs[t1 + 1:]:
@@ -127,7 +126,6 @@ class LinkStream:
                             edge_presence.append(1)
                         else:
                             edge_presence.append(0)
-                    print(edge_presence)
                     for t in range(len(edge_presence)):
                         print(edge_presence[t:t + gamma])
                         if e in self.graphs[t1 + t].edges and 1 in edge_presence[t:t + gamma]:

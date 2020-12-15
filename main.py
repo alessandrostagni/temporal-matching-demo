@@ -1,12 +1,9 @@
 import argparse
-import re
 
 import boolean
-import networkx as nx
 
-from LinkStream import LinkStream
 from BooleanEntities.Formula import Formula
-from match_building.match_building import build_link_stream_from_clause
+from match_building.match_building import build_link_stream_from_formula, build_matching
 
 
 if __name__ == '__main__':
@@ -26,9 +23,24 @@ if __name__ == '__main__':
     args = parser.parse_args()
     text_formula = args.formula
     algebra = boolean.BooleanAlgebra()
-    formula = Formula(algebra, text_formula)   
+    formula = Formula(algebra, text_formula)
 
     # Build link stream for given gamma e given formula
     gamma = args.gamma
-    formula_link_stream = build_link_stream_from_clause(algebra, formula, gamma)
+    formula_link_stream = build_link_stream_from_formula(
+        algebra, formula, gamma
+    )
+
+    # Hardcoded by now
+    assignment = {
+        boolean.Symbol('w'): algebra.TRUE,
+        boolean.Symbol('x'): algebra.FALSE,
+        boolean.Symbol('y'): algebra.TRUE,
+        boolean.Symbol('z'): algebra.FALSE
+    }
+    matching = build_matching(algebra, formula, assignment, formula_link_stream, gamma)
     print(formula_link_stream)
+    print('-------------')
+    print('-------------')
+    print('-------------')
+    print(matching)
