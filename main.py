@@ -1,4 +1,6 @@
 import argparse
+import os
+import shutil
 
 import boolean
 
@@ -39,8 +41,10 @@ if __name__ == '__main__':
         boolean.Symbol('z'): algebra.FALSE
     }
     matching = build_matching(algebra, formula, assignment, formula_link_stream, gamma)
-    print(formula_link_stream)
-    print('-------------')
-    print('-------------')
-    print('-------------')
+    if os.path.exists('.\\graphs\\link_stream'):
+        shutil.rmtree('.\\graphs\\link_stream')
+    if os.path.exists('.\\graphs\\matching'):
+        shutil.rmtree('.\\graphs\\matching')
+    formula_link_stream.save_to_file('.\\graphs\\link_stream', cumulative=False)
+    matching.save_to_file('.\\graphs\\matching', cumulative=False)
     print(matching)

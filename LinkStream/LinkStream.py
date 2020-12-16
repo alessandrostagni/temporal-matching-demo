@@ -1,7 +1,10 @@
 import logging
+import os
 
+import matplotlib.pyplot as plt
 import networkx as nx
 from networkx.algorithms.isomorphism import is_isomorphic
+import matplotlib.colors as mcolors
 
 from LinkStream.LinkStreamError import InvalidLinkStreamError
 
@@ -47,6 +50,18 @@ class LinkStream:
                 for e in g.edges:
                     if e[0] < e[1]:
                         w.write(f'{e[0]} {e[1]} {t}\n')
+
+    def save_to_file(self, path, cumulative):
+        colors = [y for x, y in mcolors.CSS4_COLORS.items()]
+        os.mkdir(path)
+        prefix = os.path.split(path)[-1]
+        folder = os.path.split(path)[:-1]
+        for t, g in enumerate(self.graphs):
+            nx.draw(g, with_labels=True, node_color=colors[t], pos=nx.spring_layout(g))
+            plt.savefig(os.path.join(path, f'{prefix}_{t}.png'))
+            if not cumulative:
+                plt.clf()
+        plt.clf()
 
     def __str__(self):
         if len(self.graphs) == 0:

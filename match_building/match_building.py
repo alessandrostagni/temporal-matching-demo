@@ -98,9 +98,12 @@ def build_matching(algebra, formula, assignment, link_stream, gamma):
         for s, val in assignment.items():
             if val == algebra.TRUE:
                 g1.add_edge(f'{s}=', f'{s}+')
-                g2.add_edge(f'{s}=', f'{s}{i}--')
+                if i > 0:
+                    g2.add_edge(f'{s}=', f'{s}{i}--')
             else:
                 g1.add_edge(f'{s}=', f'{s}-')
-                g2.add_edge(f'{s}+', f'{s}{i}++')
-        g2.add_edge(chi_nodes[i], 'c')
+                if i>0:
+                    g2.add_edge(f'{s}+', f'{s}{i}++')
+        if i > 0:
+            g2.add_edge(chi_nodes[i], 'c')
     return matching

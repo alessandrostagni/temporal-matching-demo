@@ -1,2 +1,3 @@
 boolean.py==3.8
+matplotlib==3.3.3
 networkx==2.5
