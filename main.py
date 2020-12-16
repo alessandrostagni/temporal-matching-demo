@@ -1,9 +1,12 @@
 import argparse
+import os
+import shutil
 
 import boolean
 
 from BooleanEntities.Formula import Formula
-from match_building.match_building import build_link_stream_from_clause
+from match_building.match_building import build_link_stream_from_formula, \
+    build_matching
 
 
 if __name__ == '__main__':
@@ -27,7 +30,27 @@ if __name__ == '__main__':
 
     # Build link stream for given gamma e given formula
     gamma = args.gamma
-    formula_link_stream = build_link_stream_from_clause(
+    formula_link_stream = build_link_stream_from_formula(
         algebra, formula, gamma
     )
-    print(formula_link_stream)
+
+    # Hardcoded by now
+    assignment = {
+        boolean.Symbol('w'): algebra.TRUE,
+        boolean.Symbol('x'): algebra.FALSE,
+        boolean.Symbol('y'): algebra.TRUE,
+        boolean.Symbol('z'): algebra.FALSE
+    }
+    matching = build_matching(
+        algebra, formula, assignment,
+        formula_link_stream, gamma
+    )
+    if os.path.exists('.\\graphs\\link_stream'):
+        shutil.rmtree('.\\graphs\\link_stream')
+    if os.path.exists('.\\graphs\\matching'):
+        shutil.rmtree('.\\graphs\\matching')
+    formula_link_stream.save_to_file(
+        '.\\graphs\\link_stream', cumulative=False
+    )
+    matching.save_to_file('.\\graphs\\matching', cumulative=False)
+    print(matching)

@@ -1,5 +1,8 @@
 import logging
+import os
 
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import networkx as nx
 from networkx.algorithms.isomorphism import is_isomorphic
 
@@ -32,10 +35,12 @@ class LinkStream:
                                 g.add_nodes_from(self.vertexes)
                                 self.graphs.append(g)
                         elif new_t < old_t:
-                            raise InvalidLinkStreamError('t dimension needs to be incremental!')
+                            raise InvalidLinkStreamError(
+                                't dimension needs to be incremental!'
+                            )
                     g = nx.Graph()
                     old_t = new_t
-                if record[0] != -1 and record [1] != -1:
+                if record[0] != -1 and record[1] != -1:
                     self.vertexes.update((record[0], record[1]))
                     g.add_nodes_from((record[0], record[1]))
                     g.add_edge(record[0], record[1])
@@ -48,10 +53,24 @@ class LinkStream:
                     if e[0] < e[1]:
                         w.write(f'{e[0]} {e[1]} {t}\n')
 
+    def save_to_file(self, path, cumulative):
+        colors = [y for x, y in mcolors.CSS4_COLORS.items()]
+        os.mkdir(path)
+        prefix = os.path.split(path)[-1]
+        for t, g in enumerate(self.graphs):
+            nx.draw(
+                g, with_labels=True, node_color=colors[t],
+                pos=nx.spring_layout(g)
+            )
+            plt.savefig(os.path.join(path, f'{prefix}_{t}.png'))
+            if not cumulative:
+                plt.clf()
+        plt.clf()
+
     def __str__(self):
         if len(self.graphs) == 0:
             return 'Link stream is empty!'
-        out = f'Nodes: '
+        out = 'Nodes: '
         for n in self.vertexes:
             out += f'{n}, '
         out = out[:-2] + '\n'
@@ -59,7 +78,7 @@ class LinkStream:
         for t in range(len(self.graphs)):
             g = self.graphs[t]
             out += f't: {t}\n'
-            out += f'Edges: '
+            out += 'Edges: '
             out_edges = ""
             for e in g.edges():
                 out_edges += f'{e}, '
@@ -89,11 +108,13 @@ class LinkStream:
         nodes_set = set(g.nodes)
         if not nodes_set.issubset(self.vertexes):
             raise InvalidLinkStreamError(
-                f'These nodes will be missing at time {t}: {nodes_set.difference(self.vertexes)}'
+                f'These nodes will be missing at time {t}: '
+                f'{nodes_set.difference(self.vertexes)}'
             )
         if not nodes_set.issuperset(self.vertexes):
             raise InvalidLinkStreamError(
-                f'These nodes should not be present at time {t}: {self.vertexes.difference(nodes_set)}'
+                f'These nodes should not be present at time {t}: '
+                f'{self.vertexes.difference(nodes_set)}'
             )
         self.graphs.append(g)
 
@@ -105,7 +126,7 @@ class LinkStream:
 
     def get_gamma_link_stream(self, gamma):
         gamma_link_stream = LinkStream()
-        
+
         # Initialise empty graphs for gamma link stream
         for _ in self.graphs:
             gamma_link_stream.add_graph(nx.Graph())
@@ -119,7 +140,6 @@ class LinkStream:
             # For every edge in the graph
             for e in g1.edges:
                 # Take edge into account
-                print(e)
                 if e not in checked_edges:
                     edge_presence = []
                     for g2 in self.graphs[t1 + 1:]:
@@ -127,15 +147,8 @@ class LinkStream:
                             edge_presence.append(1)
                         else:
                             edge_presence.append(0)
-                    print(edge_presence)
                     for t in range(len(edge_presence)):
-                        print(edge_presence[t:t + gamma])
-                        if e in self.graphs[t1 + t].edges and 1 in edge_presence[t:t + gamma]:
+                        if e in self.graphs[t1 + t].edges and \
+                           1 in edge_presence[t:t + gamma]:
                             gamma_link_stream.graphs[t1 + t].add_edge(*e)
         return gamma_link_stream
-
-
-
-
-
-
