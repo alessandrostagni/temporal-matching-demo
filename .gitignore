@@ -4,6 +4,7 @@ keras-py/
 test/test_output/*
 graphs/*
 .vscode
+*/node_modules/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
