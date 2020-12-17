@@ -1,8 +1,8 @@
 import * as ReactDOM from 'react-dom';
-import {Game} from './components/Game'
+import {Window} from './components/Window'
 
 function App() : any{
-  return ReactDOM.render(<Game />, document.getElementById("root"));
+  return ReactDOM.render(<Window />, document.getElementById("root"));
 }
 
 export default App;
