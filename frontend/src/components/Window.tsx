@@ -15,7 +15,7 @@ export class Window extends Component<WindowProps, WindowState>{
   constructor(props: any) {
       super(props);
       this.state = {data: ''}
-      this.handleRequest = this.handleRequest.bind(this);
+      //this.handleRequest = this.handleRequest.bind(this);
   }
 
   handleRequest() {
@@ -24,12 +24,10 @@ export class Window extends Component<WindowProps, WindowState>{
 
   render() {
     return (
-      <div>
-        <ClauseInput
-        submitHandler={() => this.handleRequest()}
-      />
-      {this.state.data}
-      </div>
+      [
+        <ClauseInput submitHandler={() => this.handleRequest()}/>,
+        <div>{this.state.data}</div>      
+      ]
     );
   }
 }

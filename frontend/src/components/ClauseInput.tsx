@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 
 interface ClauseInputProps {
-  submitHandler: Function;
+  submitHandler: any;
 }
 
 interface ClauseInputState {
@@ -17,11 +17,7 @@ export class ClauseInput extends Component<ClauseInputProps, ClauseInputState> {
 
   }
 
-  handleChange(event: any) {
-    this.setState({value: event.target.value});
-  }
-
   render() {
-    return <button onClick={() => this.props.submitHandler} />
+    return <button onClick={this.props.submitHandler} />
   }
 }

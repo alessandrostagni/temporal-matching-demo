@@ -1,8 +1,8 @@
-import * as ReactDOM from 'react-dom';
-import {Window} from './components/Window'
+import * as React from 'react';
+import {Window} from './components/Window';
 
-function App() : any{
-  return ReactDOM.render(<Window />, document.getElementById("root"));
+class App extends React.PureComponent {
+  render() {return <Window />};
 }
 
 export default App;
