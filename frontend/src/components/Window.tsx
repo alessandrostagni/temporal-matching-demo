@@ -7,26 +7,26 @@ interface WindowProps {
 }
 
 interface WindowState{
-    data: string
+    graphData: string
 }
 
 export class Window extends Component<WindowProps, WindowState>{
 
   constructor(props: any) {
       super(props);
-      this.state = {data: ''}
+      this.state = {graphData: ''}
       //this.handleRequest = this.handleRequest.bind(this);
   }
 
   handleRequest() {
-      this.setState({data: 'Clicked!'})
+      this.setState({graphData: 'Clicked!'})
   }
 
   render() {
     return (
       [
         <ClauseInput submitHandler={() => this.handleRequest()}/>,
-        <div>{this.state.data}</div>      
+        <Graph graphData = {graphData}></Graph>
       ]
     );
   }

@@ -53,6 +53,12 @@ class LinkStream:
                     if e[0] < e[1]:
                         w.write(f'{e[0]} {e[1]} {t}\n')
 
+    def to_d3(self):
+        d3_data = {}
+        for t, g in enumerate(self.graphs):
+            d3_data[t] = nx.node_link_data(g)
+        return d3_data
+
     def save_to_file(self, path, cumulative):
         colors = [y for x, y in mcolors.CSS4_COLORS.items()]
         os.mkdir(path)
