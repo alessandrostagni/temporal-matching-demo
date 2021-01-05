@@ -3,6 +3,7 @@ import shutil
 
 import boolean
 from flask import Flask, request
+from flask_cors import cross_origin
 
 from BooleanEntities.Formula import Formula
 from match_building.match_building import build_link_stream_from_formula, \
@@ -12,6 +13,7 @@ app = Flask(__name__)
 
 
 @app.route('/get-graph', methods=['POST'])
+@cross_origin()
 def get_graph():
     data = request.get_json()
     print(data)
