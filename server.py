@@ -43,7 +43,9 @@ def get_graph():
         shutil.rmtree('.\\graphs\\link_stream')
     if os.path.exists('.\\graphs\\matching'):
         shutil.rmtree('.\\graphs\\matching')
-    return matching.to_d3()
+    res = matching.to_d3()
+    print(res)
+    return res
 
 
 if __name__ == '__main__':
