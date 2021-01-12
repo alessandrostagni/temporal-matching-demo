@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { Graph } from "react-d3-graph";
+import ForceGraph2D from 'react-force-graph-2d';
 import { Box, Typography, Button, TextField, TextareaAutosize } from '@material-ui/core';
 
 interface WindowProps {   
@@ -46,7 +46,7 @@ export class Window extends Component<WindowProps, WindowState>{
     console.log(this.state.graphData)
   }
 
-  adjustGraphWithoutLinks(nodes: Array<any>) {
+  adjustNodes(nodes: Array<any>) {
     const newNodes : Array<any> = []
     const cx = 400
     const cy = 200
@@ -68,7 +68,7 @@ export class Window extends Component<WindowProps, WindowState>{
       } else {
         y0 = cy - y
       }
-      newNodes.push({"id": node.id, "x": x + cx, "y": y0 })
+      newNodes.push({"id": node.id, "name": "MIAO", "x": x + cx, "y": y0, "color": "red"})
       x = x + increment
       i++;
     }
@@ -79,8 +79,8 @@ export class Window extends Component<WindowProps, WindowState>{
     const myConfig = {
       nodeHighlightBehavior: true,
       node: {
-        color: "lightgreen",
-        size: 120,
+        color: "red",
+        size: 300,
         highlightStrokeColor: "blue",
       },
       link: {
@@ -89,19 +89,32 @@ export class Window extends Component<WindowProps, WindowState>{
     };
     const graphs: Array<any> = []
     for(const [key, value] of Object.entries(this.state.graphData)) {
-      let nodes: Array<any> = this.adjustGraphWithoutLinks(value.nodes)
+      let nodes: Array<any> = this.adjustNodes(value.nodes)
       const links = value.links
       const data = {"nodes": nodes, "links": links}
-      console.log(data)
       graphs.push(
         <Box display="flex" alignItems="center" justifyContent="center" mb={13} >
           <Typography variant="h6">T = {key}</Typography>
         </Box>,
         <Box display="flex" alignItems="center" justifyContent="center" mb={12}>
-          <Graph
-            id={"graph-" + key}
-            data={data}
-            config={myConfig}
+          <ForceGraph2D
+            nodeId="id"
+            graphData={data}
+            nodeCanvasObject={(node: any, ctx, globalScale) => {
+              const label: any = node.id;
+              const fontSize = 12/globalScale;
+              ctx.font = `${fontSize}px Sans-Serif`;
+              const textWidth = ctx.measureText(label).width;
+  
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillStyle = "black";
+              ctx.fillText(label, node.x , node.y + 10);
+              ctx.fillStyle = node.color;
+              ctx.beginPath();
+              ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false);
+              ctx.fill();
+            }}
           />
         </Box>,
         <br/>
