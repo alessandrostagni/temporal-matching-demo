@@ -1,16 +1,21 @@
 import React, {Component} from "react";
-import { Graph } from "./Graph";
+import { Graph } from "react-d3-graph";
 import { Box, Typography, Button, TextField, TextareaAutosize } from '@material-ui/core';
-
 
 interface WindowProps {   
 }
 
 interface WindowState{
     formula: string;
-    assignment: JSON
+    assignment: JSON;
     gamma: number;
-    graphData: string;
+    graphData: {
+        directed: boolean,
+        multigraph: boolean,
+        graph: {},
+        nodes: {"id": string}[],
+        links: {"source": string, "target": string}[]
+    }[]
 }
 
 export class Window extends Component<WindowProps, WindowState>{
@@ -21,7 +26,7 @@ export class Window extends Component<WindowProps, WindowState>{
         formula: '',
         assignment: JSON.parse('{}'),
         gamma: -1,
-        graphData: ''
+        graphData: []
       }
   }
 
@@ -37,8 +42,54 @@ export class Window extends Component<WindowProps, WindowState>{
       })
     };
     fetch('http://localhost:5000/get-graph', requestOptions)
-        .then(response => response.json()).then(data => this.setState({graphData: JSON.stringify(data)}))
-    this.render()
+        .then(response => response.json()).then(data => this.setState({graphData: data}))
+    console.log(this.state.graphData)
+  }
+
+  adjustGraphWithoutLinks(nodes: Array<any>) {
+    const newNodes : Array<any> = []
+    let i : number = 0
+    for (let node of nodes) {
+      newNodes.push({"id": node.id, "x": i * 10, "y": i * 10})
+      i++;
+    }
+    return newNodes
+  }
+
+  displayGraphs() {
+    const myConfig = {
+      nodeHighlightBehavior: true,
+      node: {
+        color: "lightgreen",
+        size: 120,
+        highlightStrokeColor: "blue",
+      },
+      link: {
+        highlightColor: "lightblue",
+      },
+    };
+    const graphs: Array<any> = []
+    for(const [key, value] of Object.entries(this.state.graphData)) {
+      let nodes: Array<any> = this.adjustGraphWithoutLinks(value.nodes)
+      const links = value.links
+      const data = {"nodes": nodes, "links": links}
+      console.log(data)
+      graphs.push(
+        <Box display="flex" alignItems="center" justifyContent="center" mb={13} >
+          <Typography variant="h6">T = {key}</Typography>
+        </Box>,
+        <Box display="flex" alignItems="center" justifyContent="center" mb={12}>
+          <Graph
+            id={"graph-" + key}
+            data={data}
+            config={myConfig}
+          />
+        </Box>,
+        <br/>
+      )
+    }
+    return graphs
+    
   }
 
   render() {
@@ -61,7 +112,7 @@ export class Window extends Component<WindowProps, WindowState>{
       <Box display="flex" alignItems="center" justifyContent="center">
         <Button variant="contained" color="primary" onClick={() => this.handleRequest()}>Compute!</Button>
       </Box>,
-      <Graph graphData={this.state.graphData}/>
-    ]);
+      this.displayGraphs()
+    ])
   }
 }
