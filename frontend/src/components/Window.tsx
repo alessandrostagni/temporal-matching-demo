@@ -48,9 +48,28 @@ export class Window extends Component<WindowProps, WindowState>{
 
   adjustGraphWithoutLinks(nodes: Array<any>) {
     const newNodes : Array<any> = []
-    let i : number = 0
+    const cx = 400
+    const cy = 200
+    const r = 150
+    let i: number = 0
+    const increment = 2*r / nodes.length
+    let x : number = -r
+
     for (let node of nodes) {
-      newNodes.push({"id": node.id, "x": i * 10, "y": i * 10})
+      const y = Math.sqrt(r**2 - x**2)
+      console.log(node.id)
+      console.log(x + cx)
+      console.log(cy + y)
+      console.log(cy - y)
+      console.log('-------')
+      let y0: number;
+      if (i % 2 === 0) {
+        y0 = cy + y
+      } else {
+        y0 = cy - y
+      }
+      newNodes.push({"id": node.id, "x": x + cx, "y": y0 })
+      x = x + increment
       i++;
     }
     return newNodes
