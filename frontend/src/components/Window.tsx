@@ -57,18 +57,13 @@ export class Window extends Component<WindowProps, WindowState>{
 
     for (let node of nodes) {
       const y = Math.sqrt(r**2 - x**2)
-      console.log(node.id)
-      console.log(x + cx)
-      console.log(cy + y)
-      console.log(cy - y)
-      console.log('-------')
       let y0: number;
       if (i % 2 === 0) {
         y0 = cy + y
       } else {
         y0 = cy - y
       }
-      newNodes.push({"id": node.id, "name": "MIAO", "x": x + cx, "y": y0, "color": "red"})
+      newNodes.push({"id": node.id, "name": node.id, "x": x + cx, "y": y0, "color": "red"})
       x = x + increment
       i++;
     }
@@ -76,17 +71,6 @@ export class Window extends Component<WindowProps, WindowState>{
   }
 
   displayGraphs() {
-    const myConfig = {
-      nodeHighlightBehavior: true,
-      node: {
-        color: "red",
-        size: 300,
-        highlightStrokeColor: "blue",
-      },
-      link: {
-        highlightColor: "lightblue",
-      },
-    };
     const graphs: Array<any> = []
     for(const [key, value] of Object.entries(this.state.graphData)) {
       let nodes: Array<any> = this.adjustNodes(value.nodes)
@@ -103,9 +87,8 @@ export class Window extends Component<WindowProps, WindowState>{
             nodeCanvasObject={(node: any, ctx, globalScale) => {
               const label: any = node.id;
               const fontSize = 12/globalScale;
-              ctx.font = `${fontSize}px Sans-Serif`;
-              const textWidth = ctx.measureText(label).width;
-  
+
+              ctx.font = `${fontSize}px Sans-Serif`;  
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
               ctx.fillStyle = "black";
@@ -125,18 +108,26 @@ export class Window extends Component<WindowProps, WindowState>{
   }
 
   render() {
+    const exampleAssignment = "Example:\n" +
+    "{\n" +
+      "  \"w\": \"true\", \n" +
+      "  \"x\": \"true\", \n" +
+      "  \"y\": \"false\", \n" +
+      "  \"z\": \"true\" \n" +
+    "}"
+
     return ([
       <Box display="flex" alignItems="center" justifyContent="center" mb={13} >
         <Typography variant="h3">Temporal matching from clause</Typography>
       </Box>,
       <Box display="flex" alignItems="center" justifyContent="center" mb={8}>
-        <TextField label="Clause" onChange={(e) => {this.setState({formula: e.target.value})}}/>
+        <TextField label="Clause" helperText="e.g. (x or y) and (y or z)" onChange={(e) => {this.setState({formula: e.target.value})}}/>
       </Box>,
       <Box display="flex" alignItems="center" justifyContent="center" mb={1}>
         Assignment
       </Box>,
       <Box display="flex" alignItems="center" justifyContent="center" mb={8}>
-        <TextareaAutosize rowsMin={20} rowsMax={20} style={{width:400}} onChange={(e) => {this.setState({assignment: JSON.parse(e.target.value)})}}/>
+        <TextareaAutosize placeholder={exampleAssignment} rowsMin={20} rowsMax={20} style={{width:400}} onChange={(e) => {this.setState({assignment: JSON.parse(e.target.value)})}}/>
       </Box>,
       <Box display="flex" alignItems="center" justifyContent="center" mb={8}>
         <TextField label="Gamma" onChange={(e) => {this.setState({gamma: Number(e.target.value)})}}/>
