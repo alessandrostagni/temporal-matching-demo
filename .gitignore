@@ -6,6 +6,7 @@ graphs/*
 .vscode
 */node_modules/*
 */.eslintcache
+*.tgz
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

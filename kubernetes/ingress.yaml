@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: temporal-matching-server-ingress
+  namespace: temporal-matching
+spec:
+  rules:
+  - host: temporalmatching.server.nodes.k8s.fr-par.scw.cloud
+    http:
+      paths:
+      - path: /temporal-matching-server
+        pathType: Prefix
+        backend:
+          service:
+            name: temporal-matching-server-svc
+            port:
+              number: 80

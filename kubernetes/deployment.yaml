@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporal-matching-frontend
+  namespace: temporal-matching
+  labels:
+    app: temporal-matching-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temporal-matching-frontend
+  template:
+    metadata:
+      labels:
+        app: temporal-matching-frontend
+    spec:
+      containers:
+      - name: temporal-matching-frontend
+        image: rg.fr-par.scw.cloud/the-uncle/temporal-matching-frontend:1.0.0
+        ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporal-matching-server
+  namespace: temporal-matching
+  labels:
+    app: temporal-matching-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temporal-matching-server
+  template:
+    metadata:
+      labels:
+        app: temporal-matching-server
+    spec:
+      containers:
+      - name: temporal-matching-server
+        image: rg.fr-par.scw.cloud/the-uncle/temporal-matching-server:1.0.0
+        ports:
+        - containerPort: 80
