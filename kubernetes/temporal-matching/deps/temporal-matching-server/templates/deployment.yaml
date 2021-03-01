@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "temporal-matching-server.fullname" . }}
+  name: "temporal-matching-server"
   labels:
 {{ include "temporal-matching-server.labels" . | indent 4 }}
 spec:
@@ -35,11 +35,11 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /heartbeat
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /heartbeat
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
