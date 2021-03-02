@@ -1,9 +1,9 @@
 # stage1 - build react app first 
 FROM node:10.19.0 as build
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
-COPY ./package.json /app/
-RUN yarn --silent
 COPY . /app
 RUN yarn build
 

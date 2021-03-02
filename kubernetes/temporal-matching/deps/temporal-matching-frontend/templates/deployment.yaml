@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "temporal-matching-frontend.fullname" . }}
+  name: temporal-matching-frontend.fullname
   labels:
 {{ include "temporal-matching-frontend.labels" . | indent 4 }}
 spec:

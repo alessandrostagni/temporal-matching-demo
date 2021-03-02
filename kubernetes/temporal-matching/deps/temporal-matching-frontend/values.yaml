@@ -72,7 +72,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-env:
-  - name: REACT_APP_API_URL
-    value: http://temporalmatching.server.nodes.k8s.fr-par.scw.cloud/get-graph
