@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  sample:
+    container_name: temporal-matching-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - 8000:80

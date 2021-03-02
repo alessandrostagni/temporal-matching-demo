@@ -41,7 +41,8 @@ export class Window extends Component<WindowProps, WindowState>{
         gamma: this.state.gamma
       })
     };
-    fetch('http://localhost:5000/get-graph', requestOptions)
+    const REACT_APP_API_URL: any = process.env['REACT_APP_API_URL'] + '/get-graph';
+    fetch(REACT_APP_API_URL, requestOptions)
         .then(response => response.json()).then(data => this.setState({graphData: data}))
     console.log(this.state.graphData)
   }

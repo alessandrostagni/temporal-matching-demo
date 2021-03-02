@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 
@@ -16,7 +17,6 @@ app = Flask(__name__)
 @cross_origin()
 def get_graph():
     data = request.get_json()
-    print(data)
 
     text_formula = data['formula']
     algebra = boolean.BooleanAlgebra()
@@ -44,9 +44,14 @@ def get_graph():
     if os.path.exists('.\\graphs\\matching'):
         shutil.rmtree('.\\graphs\\matching')
     res = matching.to_d3()
-    print(res)
     return res
 
 
+@app.route('/heartbeat', methods=['GET'])
+@cross_origin()
+def heartbeat():
+    return json.dumps({'ok': 1})
+
+
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', debug=False, port=80)
