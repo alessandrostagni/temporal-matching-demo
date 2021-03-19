@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import ForceGraph2D from 'react-force-graph-2d';
-import { Box, Typography, Button, TextField, TextareaAutosize } from '@material-ui/core';
+import { Box, Typography, Button, TextField } from '@material-ui/core';
 
-interface WindowProps {   
-}
+import { MainTitle } from './MainTitle';
+import { AssingmentForm } from './AssignmentForm';
+
 
 interface WindowState{
     formula: string;
@@ -18,7 +19,7 @@ interface WindowState{
     }[]
 }
 
-export class Window extends Component<WindowProps, WindowState>{
+export class Window extends Component<{}, WindowState>{
 
   constructor(props: any) {
       super(props);
@@ -109,27 +110,11 @@ export class Window extends Component<WindowProps, WindowState>{
   }
 
   render() {
-    const exampleAssignment = "Example:\n" +
-    "{\n" +
-      "  \"w\": \"true\", \n" +
-      "  \"x\": \"true\", \n" +
-      "  \"y\": \"false\", \n" +
-      "  \"z\": \"true\" \n" +
-    "}"
+    
 
     return ([
-      <Box display="flex" alignItems="center" justifyContent="center" mb={13} >
-        <Typography variant="h3">Temporal matching from clause</Typography>
-      </Box>,
-      <Box display="flex" alignItems="center" justifyContent="center" mb={8}>
-        <TextField label="Clause" helperText="e.g. (x or y) and (y or z)" onChange={(e) => {this.setState({formula: e.target.value})}}/>
-      </Box>,
-      <Box display="flex" alignItems="center" justifyContent="center" mb={1}>
-        Assignment
-      </Box>,
-      <Box display="flex" alignItems="center" justifyContent="center" mb={8}>
-        <TextareaAutosize placeholder={exampleAssignment} rowsMin={20} rowsMax={20} style={{width:400}} onChange={(e) => {this.setState({assignment: JSON.parse(e.target.value)})}}/>
-      </Box>,
+      <MainTitle/>,
+      <AssingmentForm/>,
       <Box display="flex" alignItems="center" justifyContent="center" mb={8}>
         <TextField label="Gamma" onChange={(e) => {this.setState({gamma: Number(e.target.value)})}}/>
       </Box>,
