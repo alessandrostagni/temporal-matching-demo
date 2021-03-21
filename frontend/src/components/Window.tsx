@@ -1,9 +1,11 @@
 import React, {Component} from "react";
 import ForceGraph2D from 'react-force-graph-2d';
-import { Box, Typography, Button, TextField } from '@material-ui/core';
+import { Box, Typography, Button } from '@material-ui/core';
 
 import { MainTitle } from './MainTitle';
-import { AssingmentForm } from './AssignmentForm';
+import { FormulaForm } from './FormulaForm';
+import { AssignmentForm } from './AssignmentForm';
+import { GammaForm } from './GammaForm';
 
 
 interface WindowState{
@@ -113,12 +115,11 @@ export class Window extends Component<{}, WindowState>{
     
 
     return ([
-      <MainTitle/>,
-      <AssingmentForm/>,
-      <Box display="flex" alignItems="center" justifyContent="center" mb={8}>
-        <TextField label="Gamma" onChange={(e) => {this.setState({gamma: Number(e.target.value)})}}/>
-      </Box>,
-      <Box display="flex" alignItems="center" justifyContent="center">
+      <MainTitle key='ops'/>,
+      <FormulaForm key='{FormulaForm}' onFormulaChange={(formula: string) => {this.setState({formula: formula})}}/>,
+      <AssignmentForm key='{AssignmentForm}'/>,
+      <GammaForm key='{GammaForm}'></GammaForm>,
+      <Box key='{miao}' display="flex" alignItems="center" justifyContent="center">
         <Button variant="contained" color="primary" onClick={() => this.handleRequest()}>Compute!</Button>
       </Box>,
       this.displayGraphs()

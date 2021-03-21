@@ -6,7 +6,7 @@ interface AssignmentFormState{
     assignment?: string;
 }
 
-export class AssingmentForm extends Component<{}, AssignmentFormState> {
+export class AssignmentForm extends Component<{}, AssignmentFormState> {
     
     constructor(props: any) {
         super(props);
