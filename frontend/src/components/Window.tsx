@@ -1,53 +1,47 @@
 import React, {Component} from "react";
 import ForceGraph2D from 'react-force-graph-2d';
-import { Box, Typography, Button } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
+import { handleRequest} from '../api/api';
 
 import { MainTitle } from './MainTitle';
+import { Header } from './Header';
 import { FormulaForm } from './FormulaForm';
 import { AssignmentForm } from './AssignmentForm';
 import { GammaForm } from './GammaForm';
+import { SubmitButton } from "./SubmitButton";
 
 
 interface WindowState{
     formula: string;
     assignment: JSON;
     gamma: number;
-    graphData: {
+    linkStreamData: {
         directed: boolean,
         multigraph: boolean,
         graph: {},
         nodes: {"id": string}[],
         links: {"source": string, "target": string}[]
-    }[]
+    }[];
+    matchingData: {
+      directed: boolean,
+      multigraph: boolean,
+      graph: {},
+      nodes: {"id": string}[],
+      links: {"source": string, "target": string}[]
+  }[]
 }
 
 export class Window extends Component<{}, WindowState>{
 
   constructor(props: any) {
-      super(props);
-      this.state = {
-        formula: '',
-        assignment: JSON.parse('{}'),
-        gamma: -1,
-        graphData: []
-      }
-  }
-
-  handleRequest() {
-    const requestOptions = {
-      crossDomain: true,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; utf-8' },
-      body: JSON.stringify({
-        formula: this.state.formula,
-        assignment: this.state.assignment,
-        gamma: this.state.gamma
-      })
-    };
-    const REACT_APP_API_URL: any = process.env['REACT_APP_API_URL'] + '/get-graph';
-    fetch(REACT_APP_API_URL, requestOptions)
-        .then(response => response.json()).then(data => this.setState({graphData: data}))
-    console.log(this.state.graphData)
+    super(props);
+    this.state = {
+      formula: '',
+      assignment: JSON.parse('{}'),
+      gamma: -1,
+      linkStreamData: [],
+      matchingData: []
+    }
   }
 
   adjustNodes(nodes: Array<any>) {
@@ -67,16 +61,23 @@ export class Window extends Component<{}, WindowState>{
       } else {
         y0 = cy - y
       }
-      newNodes.push({"id": node.id, "name": node.id, "x": x + cx, "y": y0, "color": "red"})
+      newNodes.push({"id": node.id, "name": node.id, "x": x + cx, "y": y0, "color": "blue"})
       x = x + increment
       i++;
     }
     return newNodes
   }
 
-  displayGraphs() {
+  displayGraphs(data: {
+    directed: boolean,
+    multigraph: boolean,
+    graph: {},
+    nodes: {"id": string}[],
+    links: {"source": string, "target": string}[]
+    }[]
+  ) {
     const graphs: Array<any> = []
-    for(const [key, value] of Object.entries(this.state.graphData)) {
+    for(const [key, value] of Object.entries(data)) {
       let nodes: Array<any> = this.adjustNodes(value.nodes)
       const links = value.links
       const data = {"nodes": nodes, "links": links}
@@ -112,17 +113,22 @@ export class Window extends Component<{}, WindowState>{
   }
 
   render() {
-    
-
-    return ([
-      <MainTitle key='ops'/>,
-      <FormulaForm key='{FormulaForm}' onFormulaChange={(formula: string) => {this.setState({formula: formula})}}/>,
-      <AssignmentForm key='{AssignmentForm}'/>,
-      <GammaForm key='{GammaForm}'></GammaForm>,
-      <Box key='{miao}' display="flex" alignItems="center" justifyContent="center">
-        <Button variant="contained" color="primary" onClick={() => this.handleRequest()}>Compute!</Button>
-      </Box>,
-      this.displayGraphs()
-    ])
+    return (
+      <div>
+        <MainTitle/>
+        <FormulaForm onFormulaChange={(formula: string) => {this.setState({formula: formula})}}/>
+        <AssignmentForm onAssignmentChange={(assignment: string) => {this.setState({assignment: JSON.parse(assignment)})}}/>
+        <GammaForm onGammaChange={(gamma: number) => {this.setState({gamma: gamma})}}></GammaForm>
+        <SubmitButton handlerParent={this} onButtonClick={handleRequest} />
+        <br/>
+        <br/>
+        <Header text='Link Stream'/>
+        {this.displayGraphs(this.state.linkStreamData)}
+        <br/>
+        <br/>
+        <Header text='Matching'/>
+        {this.displayGraphs(this.state.matchingData)}
+      </div>
+    )
   }
 }

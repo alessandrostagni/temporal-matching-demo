@@ -1,12 +1,15 @@
 import React, {Component} from "react";
 import { Box, Typography } from '@material-ui/core';
 
+interface HeaderProps{
+    text: string;
+}
 
-export class MainTitle extends Component {
+export class Header extends Component<HeaderProps, {}> {
     render() {
         return (
             <Box display="flex" alignItems="center" justifyContent="center" mb={13}>
-                <Typography variant="h3">Temporal matching from clause</Typography>
+                <Typography variant="h4">{this.props.text}</Typography>
             </Box>
         )
     }

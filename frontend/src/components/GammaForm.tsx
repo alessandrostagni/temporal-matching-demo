@@ -1,16 +1,17 @@
 import React, {Component} from "react";
 import { Box, TextField } from '@material-ui/core';
 
-interface GammaFormState{
-    gamma?: number;
+interface GammaFormProps{
+  onGammaChange: any;
 }
 
-export class GammaForm extends Component<{}, GammaFormState> {
+
+export class GammaForm extends Component<GammaFormProps, {}> {
     render() {
-        return ([
+        return (
           <Box display="flex" alignItems="center" justifyContent="center" mb={8}>
-            <TextField label="Gamma" onChange={(e) => {this.setState({gamma: Number(e.target.value)})}}/>
-          </Box>,
-        ]);
+            <TextField label="Gamma" onChange={(e) => {this.props.onGammaChange(Number(e.target.value))}}/>
+          </Box>
+        );
     }
 }

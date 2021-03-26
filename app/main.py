@@ -43,8 +43,9 @@ def get_graph():
         shutil.rmtree('.\\graphs\\link_stream')
     if os.path.exists('.\\graphs\\matching'):
         shutil.rmtree('.\\graphs\\matching')
-    res = matching.to_d3()
-    return res
+    res = {'linkStream': formula_link_stream.to_d3(),
+           'matching': matching.to_d3()}
+    return json.dumps(res)
 
 
 @app.route('/heartbeat', methods=['GET'])
