@@ -1,9 +1,8 @@
-{"a": "true", "b": "true"}
 (w or x or y) and (w or x or z)
-
 {
     "w": "true",
     "x": "true",
     "y": "false",
     "z": "true"
 }
+3

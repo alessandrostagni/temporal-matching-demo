@@ -109,7 +109,7 @@ export class Window extends Component<{}, WindowState>{
       )
     }
     if(graphs.length > 0)
-      graphs.unshift(<Header text={label}/>)
+      graphs.unshift(<Header key={label} text={label}/>)
     return graphs
     
   }
@@ -117,11 +117,11 @@ export class Window extends Component<{}, WindowState>{
   render() {
     return (
       <div>
-        <MainTitle/>
-        <FormulaForm onFormulaChange={(formula: string) => {this.setState({formula: formula})}}/>
-        <AssignmentForm onAssignmentChange={(assignment: string) => {this.setState({assignment: JSON.parse(assignment)})}}/>
-        <GammaForm onGammaChange={(gamma: number) => {this.setState({gamma: gamma})}}></GammaForm>
-        <SubmitButton handlerParent={this} onButtonClick={handleRequest} />
+        <MainTitle key={'mainTitle'} />
+        <FormulaForm key={'formulaForm'} onFormulaChange={(formula: string) => {this.setState({formula: formula})}}/>
+        <AssignmentForm key={'assingmentForm'} onAssignmentChange={(assignment: string) => {this.setState({assignment: JSON.parse(assignment)})}}/>
+        <GammaForm key={'gammaForm'} onGammaChange={(gamma: number) => {this.setState({gamma: gamma})}}></GammaForm>
+        <SubmitButton key={'submitButton'} handlerParent={this} onButtonClick={handleRequest} />
         <br/>
         <br/>
         {this.displayGraphs('Link Stream', 'blue', this.state.linkStreamData)}
