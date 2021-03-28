@@ -44,7 +44,7 @@ export class Window extends Component<{}, WindowState>{
     }
   }
 
-  adjustNodes(nodes: Array<any>) {
+  adjustNodes(nodes: Array<any>, color:string) {
     const newNodes : Array<any> = []
     const cx = 400
     const cy = 200
@@ -61,14 +61,14 @@ export class Window extends Component<{}, WindowState>{
       } else {
         y0 = cy - y
       }
-      newNodes.push({"id": node.id, "name": node.id, "x": x + cx, "y": y0, "color": "blue"})
+      newNodes.push({"id": node.id, "name": node.id, "x": x + cx, "y": y0, "color": color})
       x = x + increment
       i++;
     }
     return newNodes
   }
 
-  displayGraphs(data: {
+  displayGraphs(label: string, color: string, data: {
     directed: boolean,
     multigraph: boolean,
     graph: {},
@@ -78,7 +78,7 @@ export class Window extends Component<{}, WindowState>{
   ) {
     const graphs: Array<any> = []
     for(const [key, value] of Object.entries(data)) {
-      let nodes: Array<any> = this.adjustNodes(value.nodes)
+      let nodes: Array<any> = this.adjustNodes(value.nodes, color)
       const links = value.links
       const data = {"nodes": nodes, "links": links}
       graphs.push(
@@ -108,6 +108,8 @@ export class Window extends Component<{}, WindowState>{
         <br/>
       )
     }
+    if(graphs.length > 0)
+      graphs.unshift(<Header text={label}/>)
     return graphs
     
   }
@@ -122,12 +124,10 @@ export class Window extends Component<{}, WindowState>{
         <SubmitButton handlerParent={this} onButtonClick={handleRequest} />
         <br/>
         <br/>
-        <Header text='Link Stream'/>
-        {this.displayGraphs(this.state.linkStreamData)}
+        {this.displayGraphs('Link Stream', 'blue', this.state.linkStreamData)}
         <br/>
         <br/>
-        <Header text='Matching'/>
-        {this.displayGraphs(this.state.matchingData)}
+        {this.displayGraphs('Matching', 'green', this.state.matchingData)}
       </div>
     )
   }
