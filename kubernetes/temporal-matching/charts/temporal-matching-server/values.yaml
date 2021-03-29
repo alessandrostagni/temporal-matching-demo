@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: rg.fr-par.scw.cloud/the-uncle/temporal-matching-server
-  tag: 1.0.1
+  tag: 1.0.0
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -49,8 +49,10 @@ ingress:
         - path: /
           pathType: Prefix
           backend:
-            serviceName: temporal-matching-server
-            servicePort: 80
+            service:
+              name: temporal-matching-frontend
+              port:
+                number: 80
 
   tls: []
   #  - secretName: chart-example-tls

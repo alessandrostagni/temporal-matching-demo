@@ -1,0 +1,24 @@
+apiVersion: v1
+entries:
+  temporal-matching-frontend:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2021-03-29T03:58:17.624993629Z"
+    description: A Helm chart for Kubernetes
+    digest: 792ee1d1fdc6384599f48e86b8bc63bc5132e0a07af756dd05b10d9364bc7b2b
+    name: temporal-matching-frontend
+    urls:
+    - charts/temporal-matching-frontend-1.0.0.tgz
+    version: 1.0.0
+  temporal-matching-server:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2021-03-29T03:58:17.618868927Z"
+    description: A Helm chart for Kubernetes
+    digest: b8ea38eaaf0aa20e0723b01403c1656d7b460b56478976ba8ea8d778151df124
+    name: temporal-matching-server
+    urls:
+    - charts/temporal-matching-server-1.0.0.tgz
+    version: 1.0.0
+generated: "2021-03-29T03:58:18Z"
+serverInfo: {}
