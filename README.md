@@ -3,7 +3,7 @@
 This project refers to the [Temporal Matching paper](https://arxiv.org/abs/1812.08615).
 
 Specifically, this project has as main focus **Theorem 1**, in which a reduction of the Temporal Matching problem to 3-SAT is shown.
-The web application allows the user to input a formula and an assignment for its symbols, together with the value of γ.
+The [web application](temporalmatching.b66a4f11-aae0-4449-83ea-24d466c1f2d5.nodes.k8s.fr-par.scw.cloud) allows the user to input a formula and an assignment for its symbols, together with the value of γ.
 
 An example of input is the following:
 
@@ -33,9 +33,10 @@ I have implemented the Link Stream as a list of [NetworkX](https://networkx.org/
 
 The frontend has been implemented in React. The code can be found in the `frontend` folder.
 
+Both frontend and web server have been containerised with [Docker](https://www.docker.com/).
 The application has been deployed in Kubernetes through [Helm](https://helm.sh/) charts.
 The charts can be found inside the `Kubernetes` folder.
 The charts are not currently installed online as I do not hold an Helm repo.
 So far I have been using [Charmuseum](https://chartmuseum.com/#Instructions) locally.
 
-Given a chart repository and a kubernetes config, the `kubernetes/deploy.sh` script takes care of deploying the whole stack to a target cluster.
+Given a chart repository and a set kubernetes config, the `kubernetes/deploy.sh` script takes care of deploying the whole stack to a target cluster.

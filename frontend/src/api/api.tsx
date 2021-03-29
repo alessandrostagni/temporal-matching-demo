@@ -1,3 +1,5 @@
+import * as Scroll from 'react-scroll';
+
 export function handleRequest(ref: any) {
     const requestOptions = {
       crossDomain: true,
@@ -16,4 +18,5 @@ export function handleRequest(ref: any) {
                 linkStreamData: data.linkStream,
                 matchingData: data.matching
             }))
+    Scroll.animateScroll.scrollTo(700)
   }

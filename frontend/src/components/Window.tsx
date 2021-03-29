@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import ForceGraph2D from 'react-force-graph-2d';
 import { Box, Typography } from '@material-ui/core';
-import { handleRequest} from '../api/api';
 
+import { handleRequest} from '../api/api';
 import { MainTitle } from './MainTitle';
 import { Header } from './Header';
 import { FormulaForm } from './FormulaForm';
@@ -68,6 +68,7 @@ export class Window extends Component<{}, WindowState>{
     return newNodes
   }
 
+
   displayGraphs(label: string, color: string, data: {
     directed: boolean,
     multigraph: boolean,
@@ -75,7 +76,7 @@ export class Window extends Component<{}, WindowState>{
     nodes: {"id": string}[],
     links: {"source": string, "target": string}[]
     }[]
-  ) {
+  ) {    
     const graphs: Array<any> = []
     for(const [key, value] of Object.entries(data)) {
       let nodes: Array<any> = this.adjustNodes(value.nodes, color)
@@ -83,16 +84,16 @@ export class Window extends Component<{}, WindowState>{
       const data = {"nodes": nodes, "links": links}
       graphs.push(
         <Box display="flex" alignItems="center" justifyContent="center" mb={13} >
-          <Typography variant="h6">T = {key}</Typography>
+          <Typography variant="h4">T = {key}</Typography>
         </Box>,
         <Box display="flex" alignItems="center" justifyContent="center" mb={12}>
           <ForceGraph2D
             nodeId="id"
             graphData={data}
+            enableZoomPanInteraction={false}
             nodeCanvasObject={(node: any, ctx, globalScale) => {
               const label: any = node.id;
               const fontSize = 12/globalScale;
-
               ctx.font = `${fontSize}px Sans-Serif`;  
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
@@ -105,6 +106,7 @@ export class Window extends Component<{}, WindowState>{
             }}
           />
         </Box>,
+        <hr/>,
         <br/>
       )
     }
@@ -122,6 +124,10 @@ export class Window extends Component<{}, WindowState>{
         <AssignmentForm key={'assingmentForm'} onAssignmentChange={(assignment: string) => {this.setState({assignment: JSON.parse(assignment)})}}/>
         <GammaForm key={'gammaForm'} onGammaChange={(gamma: number) => {this.setState({gamma: gamma})}}></GammaForm>
         <SubmitButton key={'submitButton'} handlerParent={this} onButtonClick={handleRequest} />
+        <a href="https://github.com/uncleman11/temporal_matching_demo"> What is this?</a>
+        <br/>
+        <br/>
+        <hr/>
         <br/>
         <br/>
         {this.displayGraphs('Link Stream', 'blue', this.state.linkStreamData)}
