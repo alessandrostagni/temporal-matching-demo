@@ -8,6 +8,3 @@ class Formula:
 
     def get_boolean_formula(self):
         return self.boolean_formula
-    
-    
-    

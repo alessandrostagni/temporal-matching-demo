@@ -1,53 +1,50 @@
 import React, {Component} from "react";
 import ForceGraph2D from 'react-force-graph-2d';
-import { Box, Typography, Button, TextField, TextareaAutosize } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 
-interface WindowProps {   
-}
+import { handleRequest} from '../api/api';
+import { MainTitle } from './MainTitle';
+import { Header } from './Header';
+import { FormulaForm } from './FormulaForm';
+import { AssignmentForm } from './AssignmentForm';
+import { GammaForm } from './GammaForm';
+import { SubmitButton } from "./SubmitButton";
+
 
 interface WindowState{
     formula: string;
     assignment: JSON;
     gamma: number;
-    graphData: {
+    linkStreamData: {
         directed: boolean,
         multigraph: boolean,
         graph: {},
         nodes: {"id": string}[],
         links: {"source": string, "target": string}[]
-    }[]
+    }[];
+    matchingData: {
+      directed: boolean,
+      multigraph: boolean,
+      graph: {},
+      nodes: {"id": string}[],
+      links: {"source": string, "target": string}[]
+  }[]
 }
 
-export class Window extends Component<WindowProps, WindowState>{
+export class Window extends Component<{}, WindowState>{
 
   constructor(props: any) {
-      super(props);
-      this.state = {
-        formula: '',
-        assignment: JSON.parse('{}'),
-        gamma: -1,
-        graphData: []
-      }
+    super(props);
+    this.state = {
+      formula: '',
+      assignment: JSON.parse('{}'),
+      gamma: -1,
+      linkStreamData: [],
+      matchingData: []
+    }
   }
 
-  handleRequest() {
-    const requestOptions = {
-      crossDomain: true,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; utf-8' },
-      body: JSON.stringify({
-        formula: this.state.formula,
-        assignment: this.state.assignment,
-        gamma: this.state.gamma
-      })
-    };
-    const REACT_APP_API_URL: any = process.env['REACT_APP_API_URL'] + '/get-graph';
-    fetch(REACT_APP_API_URL, requestOptions)
-        .then(response => response.json()).then(data => this.setState({graphData: data}))
-    console.log(this.state.graphData)
-  }
-
-  adjustNodes(nodes: Array<any>) {
+  adjustNodes(nodes: Array<any>, color:string) {
     const newNodes : Array<any> = []
     const cx = 400
     const cy = 200
@@ -64,31 +61,39 @@ export class Window extends Component<WindowProps, WindowState>{
       } else {
         y0 = cy - y
       }
-      newNodes.push({"id": node.id, "name": node.id, "x": x + cx, "y": y0, "color": "red"})
+      newNodes.push({"id": node.id, "name": node.id, "x": x + cx, "y": y0, "color": color})
       x = x + increment
       i++;
     }
     return newNodes
   }
 
-  displayGraphs() {
+
+  displayGraphs(label: string, color: string, data: {
+    directed: boolean,
+    multigraph: boolean,
+    graph: {},
+    nodes: {"id": string}[],
+    links: {"source": string, "target": string}[]
+    }[]
+  ) {    
     const graphs: Array<any> = []
-    for(const [key, value] of Object.entries(this.state.graphData)) {
-      let nodes: Array<any> = this.adjustNodes(value.nodes)
+    for(const [key, value] of Object.entries(data)) {
+      let nodes: Array<any> = this.adjustNodes(value.nodes, color)
       const links = value.links
       const data = {"nodes": nodes, "links": links}
       graphs.push(
         <Box display="flex" alignItems="center" justifyContent="center" mb={13} >
-          <Typography variant="h6">T = {key}</Typography>
+          <Typography variant="h4">T = {key}</Typography>
         </Box>,
         <Box display="flex" alignItems="center" justifyContent="center" mb={12}>
           <ForceGraph2D
             nodeId="id"
             graphData={data}
+            enableZoomPanInteraction={false}
             nodeCanvasObject={(node: any, ctx, globalScale) => {
               const label: any = node.id;
               const fontSize = 12/globalScale;
-
               ctx.font = `${fontSize}px Sans-Serif`;  
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
@@ -101,42 +106,35 @@ export class Window extends Component<WindowProps, WindowState>{
             }}
           />
         </Box>,
+        <hr/>,
         <br/>
       )
     }
+    if(graphs.length > 0)
+      graphs.unshift(<Header key={label} text={label}/>)
     return graphs
     
   }
 
   render() {
-    const exampleAssignment = "Example:\n" +
-    "{\n" +
-      "  \"w\": \"true\", \n" +
-      "  \"x\": \"true\", \n" +
-      "  \"y\": \"false\", \n" +
-      "  \"z\": \"true\" \n" +
-    "}"
-
-    return ([
-      <Box display="flex" alignItems="center" justifyContent="center" mb={13} >
-        <Typography variant="h3">Temporal matching from clause</Typography>
-      </Box>,
-      <Box display="flex" alignItems="center" justifyContent="center" mb={8}>
-        <TextField label="Clause" helperText="e.g. (x or y) and (y or z)" onChange={(e) => {this.setState({formula: e.target.value})}}/>
-      </Box>,
-      <Box display="flex" alignItems="center" justifyContent="center" mb={1}>
-        Assignment
-      </Box>,
-      <Box display="flex" alignItems="center" justifyContent="center" mb={8}>
-        <TextareaAutosize placeholder={exampleAssignment} rowsMin={20} rowsMax={20} style={{width:400}} onChange={(e) => {this.setState({assignment: JSON.parse(e.target.value)})}}/>
-      </Box>,
-      <Box display="flex" alignItems="center" justifyContent="center" mb={8}>
-        <TextField label="Gamma" onChange={(e) => {this.setState({gamma: Number(e.target.value)})}}/>
-      </Box>,
-      <Box display="flex" alignItems="center" justifyContent="center">
-        <Button variant="contained" color="primary" onClick={() => this.handleRequest()}>Compute!</Button>
-      </Box>,
-      this.displayGraphs()
-    ])
+    return (
+      <div>
+        <MainTitle key={'mainTitle'} />
+        <FormulaForm key={'formulaForm'} onFormulaChange={(formula: string) => {this.setState({formula: formula})}}/>
+        <AssignmentForm key={'assingmentForm'} onAssignmentChange={(assignment: string) => {this.setState({assignment: JSON.parse(assignment)})}}/>
+        <GammaForm key={'gammaForm'} onGammaChange={(gamma: number) => {this.setState({gamma: gamma})}}></GammaForm>
+        <SubmitButton key={'submitButton'} handlerParent={this} onButtonClick={handleRequest} />
+        <a href="https://github.com/uncleman11/temporal_matching_demo"> What is this?</a>
+        <br/>
+        <br/>
+        <hr/>
+        <br/>
+        <br/>
+        {this.displayGraphs('Link Stream', 'blue', this.state.linkStreamData)}
+        <br/>
+        <br/>
+        {this.displayGraphs('Matching', 'green', this.state.matchingData)}
+      </div>
+    )
   }
 }
