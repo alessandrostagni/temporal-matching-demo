@@ -1,4 +1,4 @@
-# temporal_matching_demo
+# Temporal Matching Demo
 
 This project refers to the [Temporal Matching paper](https://arxiv.org/abs/1812.08615).
 
