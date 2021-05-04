@@ -36,9 +36,14 @@ export class Window extends Component<{}, WindowState>{
   constructor(props: any) {
     super(props);
     this.state = {
-      formula: '',
-      assignment: JSON.parse('{}'),
-      gamma: -1,
+      formula: '(w or x or y) and (w or x or z)',
+      assignment: JSON.parse("{\n" +
+      "  \"w\": \"true\", \n" +
+      "  \"x\": \"true\", \n" +
+      "  \"y\": \"false\", \n" +
+      "  \"z\": \"true\" \n" +
+      "}"),
+      gamma: 3,
       linkStreamData: [],
       matchingData: []
     }
@@ -120,9 +125,9 @@ export class Window extends Component<{}, WindowState>{
     return (
       <div>
         <MainTitle key={'mainTitle'} />
-        <FormulaForm key={'formulaForm'} onFormulaChange={(formula: string) => {this.setState({formula: formula})}}/>
-        <AssignmentForm key={'assingmentForm'} onAssignmentChange={(assignment: string) => {this.setState({assignment: JSON.parse(assignment)})}}/>
-        <GammaForm key={'gammaForm'} onGammaChange={(gamma: number) => {this.setState({gamma: gamma})}}></GammaForm>
+        <FormulaForm key={'formulaForm'} formula={this.state.formula} onFormulaChange={(formula: string) => {this.setState({formula: formula})}}/>
+        <AssignmentForm key={'assingmentForm'} assignment={this.state.assignment} onAssignmentChange={(assignment: string) => {this.setState({assignment: JSON.parse(assignment)})}}/>
+        <GammaForm key={'gammaForm'} gamma={this.state.gamma} onGammaChange={(gamma: number) => {this.setState({gamma: gamma})}}></GammaForm>
         <SubmitButton key={'submitButton'} handlerParent={this} onButtonClick={handleRequest} />
         <a href="https://github.com/uncleman11/temporal_matching_demo"> What is this?</a>
         <br/>
