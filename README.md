@@ -3,7 +3,7 @@
 This project refers to the [Temporal Matching paper](https://arxiv.org/abs/1812.08615).
 
 Specifically, this project has as main focus **Theorem 1**, in which a reduction of the Temporal Matching problem to 3-SAT is shown.
-The [web application](http://temporalmatching.b66a4f11-aae0-4449-83ea-24d466c1f2d5.nodes.k8s.fr-par.scw.cloud) allows the user to input a formula and an assignment for its symbols, together with the value of γ.
+The web application allows the user to input a formula and an assignment for its symbols, together with the value of γ.
 
 An example of input is the following:
 
